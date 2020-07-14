@@ -12,9 +12,9 @@ $cache.set("pg", 1)
 var urlt = "请自行填入地址"
 
 // menu data
-var data = [{ "name": "最近加精", "id": "rf" }, 
-            { "name": "当前最热", "id": "hot" }, 
-            { "name": "最近得分", "id": "rp" }, 
+var data = [{ "name": "最近加精", "id": "rf" },
+            { "name": "当前最热", "id": "hot" },
+            { "name": "最近得分", "id": "rp" },
             { "name": "10+分钟", "id": "long" },]
 // main ui, which is a list of entries
 $ui.render({
@@ -45,7 +45,7 @@ $ui.render({
         type: "list",
         props: {
           id:"list",
-          rowHeight: 100,          
+          rowHeight: 100,
           template: [
             {
               type: "image",
@@ -84,7 +84,7 @@ $ui.render({
             sender.endFetchingMore();
             var page = $cache.get("pg") + 1;
             $cache.set("pg", page);
-            
+
             getdata();
           }
         }
@@ -102,7 +102,7 @@ $ui.render({
 function getdata() {
     var id = $cache.get("id")
     var pg = $cache.get("pg")
-    
+
     $ui.loading(true)
     $http.get({
         url: urlt +"v.php?category="+ id + "&page=" + pg,
@@ -126,7 +126,7 @@ function getdata() {
                 })
                 return
             }
-            
+
             let newdata=[]
             var data
             if (pg == 1 ) {
@@ -136,10 +136,10 @@ function getdata() {
             }
             // extract data from matched value
             for (let video of videourls) {
-                
+
                 let imgurl = video.match(/src="(http\S*jpg)"/)[1]
                 imgurl = imgurl.replace(/\d_/,'').replace(/^http:/,'https:');
-                
+
                 const videokey = video.match(/viewkey=([0-9a-fA-F]*?)&/)[1]
                 console.log(video);
                 const label = video.match(/title="(.*?)"/)[1]
@@ -151,16 +151,15 @@ function getdata() {
                     label:{
                         text: label
                     },
-                    url: videokey        
                     });
-                    
+
               }
               // assign data to list
               $("list").data = data;
               // make ui stop fetch more
               $("list").endRefreshing();
 
-              
+
         }
     })
 }
@@ -181,9 +180,9 @@ function random_ip(){
 
 // get page content from view page, not ads loaded. !!!!
 function geturl(item){
-    
+
     $http.get({
-        url: urlt + "view_video.php?viewkey=" + item.url,        
+        url: urlt + "view_video.php?viewkey=" + item.url,
         header: {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36',
             'X-Forwarded-For':random_ip(),
@@ -198,10 +197,10 @@ function geturl(item){
           if(videourl==null){
           const code = data.match(/strencode.*?\)/)[0];
           // use self assigned encode function, this is not a trick
-          videourl = eval(code);          
-          
+          videourl = eval(code);
+
           videourl = videourl.match(/(http.*?)['"]/)[1]
-          
+
           }else{
             videourl=videourl[1]
           }
@@ -214,10 +213,10 @@ function geturl(item){
       })
 }
 
- 
+
 
 function play(item) {
-    
+
     $ui.push({
       props: {
         title: "91飞车"
@@ -226,14 +225,14 @@ function play(item) {
         {
             type: "label",
             id:"title",
-            props: 
+            props:
             {
               text: item.text
             },
-            layout: function(make, view) 
+            layout: function(make, view)
             {
               make.left.right.insets(10)
-              
+
             }
         },
         {
@@ -245,7 +244,7 @@ function play(item) {
             },
             layout: function(make, view) {
                 make.top.equalTo(90)
-                make.left.right.equalTo(0)              
+                make.left.right.equalTo(0)
                 make.height.equalTo(256)
             }
           },
@@ -256,7 +255,7 @@ function play(item) {
           },
           layout: function(make, view) {
               make.top.equalTo(346)
-              make.left.right.insets(10)              
+              make.left.right.insets(10)
             //make.height.equalTo(256)
           },
           events:
@@ -264,7 +263,7 @@ function play(item) {
             // this download function need to be updated.
             // at least tell user the size if the download started or not.
             // although there is a prcess bar.
-              tapped : (sender) => 
+              tapped : (sender) =>
               {
                 let downurl=item.url
                 //console.log(downurl)
